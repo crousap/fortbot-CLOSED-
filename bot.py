@@ -32,10 +32,7 @@ async def ping(ctx):
 
 @Bot.command(pass_context= True)
 async def help(ctx):
-    await Bot.send_message(ctx.message.author, "\
-                            **О, привет, знал что тебе будет инетерсно какие же тут команды, но к сожалению бот временно находится в разработке.\n\
-                            Так что советую чуть-чуть подождать.\n\
-                            Удачи ))**")
+    await Bot.send_message(ctx.message.author, " **О, привет, знал что тебе будет инетерсно какие же тут команды, но к сожалению бот временно находится в разработке.\nТак что советую чуть-чуть подождать.\nУдачи ))**")
 
 @Bot.command(pass_context = True)
 async def afk(ctx):
