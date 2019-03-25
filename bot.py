@@ -11,10 +11,12 @@ async def my_time():
     await Bot.wait_until_ready()
     moscow = datetime.now(timezone('Europe/Moscow')).strftime('%H:%M')
     channel = Bot.get_channel("559596558631436289")
-    await Bot.edit_channel(channel, name=f"now {moscow}")
+    chan_bef = " ".join(channel.name.split()[0:-1])
+    await Bot.edit_channel(channel, name=f"{chan_bef} {moscow}")
     while not Bot.is_closed:
         moscow = datetime.now(timezone('Europe/Moscow')).strftime('%H:%M')
-        await Bot.edit_channel(channel, name=f"now {moscow}")
+        chan_bef = " ".join(channel.name.split()[0:-1])
+        await Bot.edit_channel(channel, name=f"{chan_bef} {moscow}")
         await asyncio.sleep(60)
 
 
@@ -32,13 +34,17 @@ async def on_voice_state_update(before, after):
     members_online = [mem for mem in server.members if mem.status == "online"]
     for channel in v_channels:
         v_members.extend(channel.voice_members)
-    await Bot.edit_channel(Bot.get_channel("559601161368371200"), name= f"now in voice {len(v_members)}")
+    v_channel = Bot.get_channel("559601161368371200")
+    chan_bef = " ".join(v_channel.name.split()[0:-1])
+    await Bot.edit_channel(v_channel, name= f"{chan_bef} {len(v_members)}")
 
 @Bot.event
 async def on_member_update(before, after):
     server = Bot.get_server("457617717755904011")
     channel_o = Bot.get_channel("559601147145617429")
-    await Bot.edit_channel(channel_o, name = f"now online {len([mem for mem in server.members if mem.status == discord.Status.online])}")
+    chan_bef = " ".join(channel_o.name.split()[0:-1])
+    online = [mem for mem in server.members if mem.status == discord.Status.online]
+    await Bot.edit_channel(channel_o, name = f"{chan_bef} {len(online)}")
 
 
 @Bot.event
@@ -102,6 +108,6 @@ async def info(ctx, user: discord.User):
         "Created at": str(user.created_at)[:16]
     })
     await Bot.say(embed=emb)
-    
+
 Bot.loop.create_task(my_time())
 Bot.run(os.environ.get('BOT_TOKEN'))
