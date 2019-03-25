@@ -9,7 +9,25 @@ who_afk = {}
 
 @Bot.event
 async def on_ready():
-    pass
+    print("Online")
+
+@Bot.event
+async def on_voice_state_update(before, after):
+    server = Bot.get_server("457617717755904011")
+    channels = server.channels
+    v_channels = [channel for channel in channels if channel.type == discord.ChannelType.voice]
+    v_members = []
+    members_online = [mem for mem in server.members if mem.status == "online"]
+    for channel in v_channels:
+        v_members.extend(channel.voice_members)
+    await Bot.edit_channel(Bot.get_channel("559558111686557743"), name= f"now in voice {len(v_members)}")
+
+@Bot.event
+async def on_member_update(before, after):
+    server = Bot.get_server("457617717755904011")
+    channel_o = Bot.get_channel("559558129302634506")
+    await Bot.edit_channel(channel_o, name = f"now online {len([mem for mem in server.members if mem.status == discord.Status.online])}")
+
 
 @Bot.event
 async def on_message(msg):
