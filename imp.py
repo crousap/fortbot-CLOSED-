@@ -1,6 +1,11 @@
 import discord, json, os, asyncio
 from discord.ext import commands
 from discord.ext.commands import Bot
+from datetime import datetime
+from pytz import timezone
+
+now = datetime.now()
+
 
 colour = 0x39d0d6
 

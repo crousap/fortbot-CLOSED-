@@ -7,9 +7,21 @@ Bot.remove_command("help")
 
 who_afk = {}
 
+async def my_time():
+    await Bot.wait_until_ready()
+    moscow = datetime.now(timezone('Europe/Moscow')).strftime('%H:%M')
+    channel = Bot.get_channel("559596558631436289")
+    await Bot.edit_channel(channel, name=moscow)
+    while not Bot.is_closed:
+        moscow = datetime.now(timezone('Europe/Moscow')).strftime('%H:%M')
+        await Bot.edit_channel(channel, name=moscow)
+        await asyncio.sleep(60)
+
+
 @Bot.event
 async def on_ready():
     print("Online")
+
 
 @Bot.event
 async def on_voice_state_update(before, after):
@@ -90,5 +102,6 @@ async def info(ctx, user: discord.User):
         "Created at": str(user.created_at)[:16]
     })
     await Bot.say(embed=emb)
-
+    
+Bot.loop.create_task(my_time())
 Bot.run(os.environ.get('BOT_TOKEN'))
