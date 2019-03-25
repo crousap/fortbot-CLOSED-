@@ -11,10 +11,10 @@ async def my_time():
     await Bot.wait_until_ready()
     moscow = datetime.now(timezone('Europe/Moscow')).strftime('%H:%M')
     channel = Bot.get_channel("559596558631436289")
-    await Bot.edit_channel(channel, name=moscow)
+    await Bot.edit_channel(channel, name=f"now {moscow}")
     while not Bot.is_closed:
         moscow = datetime.now(timezone('Europe/Moscow')).strftime('%H:%M')
-        await Bot.edit_channel(channel, name=moscow)
+        await Bot.edit_channel(channel, name=f"now {moscow}")
         await asyncio.sleep(60)
 
 
@@ -32,12 +32,12 @@ async def on_voice_state_update(before, after):
     members_online = [mem for mem in server.members if mem.status == "online"]
     for channel in v_channels:
         v_members.extend(channel.voice_members)
-    await Bot.edit_channel(Bot.get_channel("559558111686557743"), name= f"now in voice {len(v_members)}")
+    await Bot.edit_channel(Bot.get_channel("559601161368371200"), name= f"now in voice {len(v_members)}")
 
 @Bot.event
 async def on_member_update(before, after):
     server = Bot.get_server("457617717755904011")
-    channel_o = Bot.get_channel("559558129302634506")
+    channel_o = Bot.get_channel("559601147145617429")
     await Bot.edit_channel(channel_o, name = f"now online {len([mem for mem in server.members if mem.status == discord.Status.online])}")
 
 
