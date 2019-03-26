@@ -22,22 +22,22 @@ async def my_time():
 async def rainbow_role():
     await Bot.wait_until_ready()
     server = Bot.get_server("457617717755904011")   # Беру сервер который нужно...
-    discord.utils.get(server.roles, name="Premium") # Ищу роль с нужным мне названием
+    role = discord.utils.get(server.roles, name="Premium") # Ищу роль с нужным мне названием
     sleep = 0.3 # Устанавливаю значение для задержки
     while not Bot.is_closed:    # будет работать пока бот не выключится
-        await Bot.edit_role(ctx.message.server, role, colour= discord.Colour.red())
+        await Bot.edit_role(server, role, colour= discord.Colour.red())
         await asyncio.sleep(sleep)
-        await Bot.edit_role(ctx.message.server, role, colour= discord.Colour.orange())
+        await Bot.edit_role(server, role, colour= discord.Colour.orange())
         await asyncio.sleep(sleep)
-        await Bot.edit_role(ctx.message.server, role, colour= discord.Colour.gold())
+        await Bot.edit_role(server, role, colour= discord.Colour.gold())
         await asyncio.sleep(sleep)
-        await Bot.edit_role(ctx.message.server, role, colour= discord.Colour.green())
+        await Bot.edit_role(server, role, colour= discord.Colour.green())
         await asyncio.sleep(sleep)
-        await Bot.edit_role(ctx.message.server, role, colour= discord.Colour.blue())
+        await Bot.edit_role(server, role, colour= discord.Colour.blue())
         await asyncio.sleep(sleep)
-        await Bot.edit_role(ctx.message.server, role, colour= discord.Colour.dark_blue())
+        await Bot.edit_role(server, role, colour= discord.Colour.dark_blue())
         await asyncio.sleep(sleep)
-        await Bot.edit_role(ctx.message.server, role, colour= discord.Colour.dark_purple())
+        await Bot.edit_role(server, role, colour= discord.Colour.dark_purple())
         await asyncio.sleep(sleep)
 
 
