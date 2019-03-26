@@ -7,6 +7,7 @@ Bot.remove_command("help")
 
 who_afk = {}
 
+
 async def my_time():
     await Bot.wait_until_ready()
     moscow = datetime.now(timezone('Europe/Moscow')).strftime('%H:%M')  # Узнаем время по МСК
@@ -19,32 +20,10 @@ async def my_time():
         await Bot.edit_channel(channel, name=f"{chan_bef} {moscow}")
         await asyncio.sleep(60)
 
-async def rainbow_role():
-    await Bot.wait_until_ready()
-    server = Bot.get_server("457617717755904011")   # Беру сервер который нужно...
-    role = discord.utils.get(server.roles, name="Premium") # Ищу роль с нужным мне названием
-    sleep = 0.3 # Устанавливаю значение для задержки
-    while not Bot.is_closed:    # будет работать пока бот не выключится
-        await Bot.edit_role(server, role, colour= discord.Colour.red())
-        await asyncio.sleep(sleep)
-        await Bot.edit_role(server, role, colour= discord.Colour.orange())
-        await asyncio.sleep(sleep)
-        await Bot.edit_role(server, role, colour= discord.Colour.gold())
-        await asyncio.sleep(sleep)
-        await Bot.edit_role(server, role, colour= discord.Colour.green())
-        await asyncio.sleep(sleep)
-        await Bot.edit_role(server, role, colour= discord.Colour.blue())
-        await asyncio.sleep(sleep)
-        await Bot.edit_role(server, role, colour= discord.Colour.dark_blue())
-        await asyncio.sleep(sleep)
-        await Bot.edit_role(server, role, colour= discord.Colour.dark_purple())
-        await asyncio.sleep(sleep)
-
 
 @Bot.event
 async def on_ready():
     print("Online")
-
 
 @Bot.event
 async def on_voice_state_update(before, after):
@@ -131,5 +110,4 @@ async def info(ctx, user: discord.User):
     await Bot.say(embed=emb)
 
 Bot.loop.create_task(my_time())
-Bot.loop.create_task(rainbow_role())
 Bot.run(os.environ.get('BOT_TOKEN'))
