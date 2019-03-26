@@ -9,8 +9,8 @@ who_afk = {}
 
 async def my_time():
     await Bot.wait_until_ready()
-    moscow = datetime.now(timezone('Europe/Moscow')).strftime('%H:%M')
-    channel = Bot.get_channel("559596558631436289")
+    moscow = datetime.now(timezone('Europe/Moscow')).strftime('%H:%M')  # Узнаем время по МСК
+    channel = Bot.get_channel("559596558631436289")         # TIME CHANNEL  
     chan_bef = " ".join(channel.name.split()[0:-1])
     await Bot.edit_channel(channel, name=f"{chan_bef} {moscow}")
     while not Bot.is_closed:
@@ -18,6 +18,27 @@ async def my_time():
         chan_bef = " ".join(channel.name.split()[0:-1])
         await Bot.edit_channel(channel, name=f"{chan_bef} {moscow}")
         await asyncio.sleep(60)
+
+async def rainbow_role():
+    await Bot.wait_until_ready()
+    server = Bot.get_server("457617717755904011")   # Беру сервер который нужно...
+    discord.utils.get(server.roles, name="Premium") # Ищу роль с нужным мне названием
+    sleep = 0.3 # Устанавливаю значение для задержки
+    while not Bot.is_closed:    # будет работать пока бот не выключится
+        await Bot.edit_role(ctx.message.server, role, colour= discord.Colour.red())
+        await asyncio.sleep(sleep)
+        await Bot.edit_role(ctx.message.server, role, colour= discord.Colour.orange())
+        await asyncio.sleep(sleep)
+        await Bot.edit_role(ctx.message.server, role, colour= discord.Colour.gold())
+        await asyncio.sleep(sleep)
+        await Bot.edit_role(ctx.message.server, role, colour= discord.Colour.green())
+        await asyncio.sleep(sleep)
+        await Bot.edit_role(ctx.message.server, role, colour= discord.Colour.blue())
+        await asyncio.sleep(sleep)
+        await Bot.edit_role(ctx.message.server, role, colour= discord.Colour.dark_blue())
+        await asyncio.sleep(sleep)
+        await Bot.edit_role(ctx.message.server, role, colour= discord.Colour.dark_purple())
+        await asyncio.sleep(sleep)
 
 
 @Bot.event
@@ -27,16 +48,16 @@ async def on_ready():
 
 @Bot.event
 async def on_voice_state_update(before, after):
-    server = Bot.get_server("457617717755904011")
-    channels = server.channels
-    v_channels = [channel for channel in channels if channel.type == discord.ChannelType.voice]
+    server = Bot.get_server("457617717755904011")   # Беру сервер
+    channels = server.channels  # Юеру все каналы
+    v_channels = [channel for channel in channels if channel.type == discord.ChannelType.voice] # СОздается массив с каналами типа voice
     v_members = []
-    members_online = [mem for mem in server.members if mem.status == "online"]
+    members_online = [mem for mem in server.members if mem.status == "online"]  # Массив пользователей (members) с статусом online
     for channel in v_channels:
-        v_members.extend(channel.voice_members)
-    v_channel = Bot.get_channel("559601161368371200")
-    chan_bef = " ".join(v_channel.name.split()[0:-1])
-    await Bot.edit_channel(v_channel, name= f"{chan_bef} {len(v_members)}")
+        v_members.extend(channel.voice_members) # Составляем список людей которые в войс каналах
+    v_channel = Bot.get_channel("559601161368371200")   # Беру голосовой канал который мне нужен
+    chan_bef = " ".join(v_channel.name.split()[0:-1])   # Берем навзвание канала которое было до этого и уберает последнюю позицию через массив
+    await Bot.edit_channel(v_channel, name= f"{chan_bef} {len(v_members)}") # редактирует канал на новое название с обновленной информацией
 
 @Bot.event
 async def on_member_update(before, after):
@@ -110,4 +131,5 @@ async def info(ctx, user: discord.User):
     await Bot.say(embed=emb)
 
 Bot.loop.create_task(my_time())
+Bot.loop.create_task(rainbow_role())
 Bot.run(os.environ.get('BOT_TOKEN'))
