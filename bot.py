@@ -31,7 +31,6 @@ async def on_voice_state_update(before, after):
     channels = server.channels  # Юеру все каналы
     v_channels = [channel for channel in channels if channel.type == discord.ChannelType.voice] # СОздается массив с каналами типа voice
     v_members = []
-    members_online = [mem for mem in server.members if mem.status == "online"]  # Массив пользователей (members) с статусом online
     for channel in v_channels:
         v_members.extend(channel.voice_members) # Составляем список людей которые в войс каналах
     v_channel = Bot.get_channel("559601161368371200")   # Беру голосовой канал который мне нужен
@@ -108,6 +107,32 @@ async def info(ctx, user: discord.User):
         "Created at": str(user.created_at)[:16]
     })
     await Bot.say(embed=emb)
+
+@Bot.group(pass_context= True)
+@commands.has_permissions(administrator= True)
+async def message(ctx):
+    pass
+
+
+@message.command(pass_context= True)
+@commands.has_permissions(administrator= True)
+async def embed(ctx):
+    content = ctx.message.content.split("\n")[1:]
+    # if content[-1].startswith("https"):
+    #     image = True
+    #     content.pop(-1)
+    
+    c_title = content[0]    # Title
+    descp = "\n".join(content[1:])  # Description
+    author = ctx.message.author # Author
+    
+    emb = discord.Embed(title= c_title, description= descp)
+    
+    # if image == True:
+    #     emb.set_thumbnail(url= content[-1])
+
+    await Bot.delete_message(ctx.message)
+    await Bot.say(embed= emb)
 
 Bot.loop.create_task(my_time())
 Bot.run(os.environ.get('BOT_TOKEN'))
