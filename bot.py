@@ -135,4 +135,4 @@ async def embed(ctx):
     await Bot.say(embed= emb)
 
 Bot.loop.create_task(my_time())
-Bot.run(os.environ.get('BOT_TOKEN'))
+Bot.run("NTU5NDk2MTgyNTM2MjA4Mzg2.XKbsXA.vfhuP-7NbCawfncrBTcqGtMP7ls")
