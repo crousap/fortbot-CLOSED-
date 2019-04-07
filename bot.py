@@ -1,4 +1,4 @@
-from imp import *
+from __init__ import *
 from func import *
 
 Bot = commands.Bot(command_prefix= "$$")
@@ -24,6 +24,7 @@ async def my_time():
 @Bot.event
 async def on_ready():
     print("Online")
+    await Bot.change_presence(status= discord.status.dnd, game= discord.Gmae("$$help"))
 
 @Bot.event
 async def on_voice_state_update(member, before, after):
