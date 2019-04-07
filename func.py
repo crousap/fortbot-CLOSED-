@@ -21,7 +21,6 @@ author: need to footer, if autor is none then footer now will be exist
         emb = discord.Embed(title= title, colour= colour)
         if a_author is not None:
                 emb.set_author(name= a_author.name, icon_url= a_author.avatar_url, url= link.format(a_author.id))
-        emb.set_thumbnail(url= author.avatar_url)
         if author is not None:
                 emb.set_footer(text= "Requested by " + author.display_name, icon_url= author.avatar_url)
         return emb
