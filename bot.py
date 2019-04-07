@@ -11,7 +11,7 @@ who_afk = {}
 async def my_time():
     await Bot.wait_until_ready()
     moscow = datetime.now(timezone('Europe/Moscow')).strftime('%H:%M')  # Узнаем время по МСК
-    channel = Bot.get_channel(564076987392458808)         # TIME CHANNEL  
+    channel = Bot.get_channel(559596558631436289)         # TIME CHANNEL  
     chan_bef = " ".join(channel.name.split()[0:-1])
     await channel.edit(name=f"{chan_bef} {moscow}")
     while not Bot.is_closed():
@@ -24,24 +24,24 @@ async def my_time():
 @Bot.event
 async def on_ready():
     print("Online")
-    await Bot.change_presence(status= discord.status.dnd, game= discord.Gmae("$$help"))
+    await Bot.change_presence(status= discord.Status.dnd, game= discord.Game("$$help"))
 
 @Bot.event
 async def on_voice_state_update(member, before, after):
-    guild = Bot.get_guild(557164062144987136)   # Беру сервер
+    guild = Bot.get_guild(457617717755904011)   # Беру сервер
     channels = guild.channels  # Юеру все каналы
     v_channels = [channel for channel in channels if isinstance(channel, discord.VoiceChannel)]
     v_members = []
     for channel in v_channels:
         v_members.extend(channel.members) # Составляем список людей которые в войс каналах
-    v_channel = Bot.get_channel(564082135187587120)   # Беру голосовой канал который мне нужен
+    v_channel = Bot.get_channel(559601161368371200)   # Беру голосовой канал который мне нужен
     chan_bef = " ".join(v_channel.name.split()[0:-1])   # Берем навзвание канала которое было до этого и уберает последнюю позицию через массив
     await v_channel.edit(name= f"{chan_bef} {len(v_members)}") # редактирует канал на новое название с обновленной информацией
 
 @Bot.event
 async def on_member_update(before, after):
-    guild = Bot.get_guild(557164062144987136)
-    channel_o = Bot.get_channel(564086232104304652)
+    guild = Bot.get_guild(457617717755904011)
+    channel_o = Bot.get_channel(559601147145617429)
     chan_bef = " ".join(channel_o.name.split()[0:-1])
     online = [mem for mem in guild.members if mem.status is discord.Status.online]
     await channel_o.edit(name = f"{chan_bef} {len(online)}")
