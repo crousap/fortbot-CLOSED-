@@ -24,7 +24,7 @@ async def my_time():
 @Bot.event
 async def on_ready():
     print("Online")
-    await Bot.change_presence(status= discord.Status.dnd, game= discord.Game("$$help"))
+    await Bot.change_presence(status= discord.Status.dnd, activity= discord.Game("$$help"))
 
 @Bot.event
 async def on_voice_state_update(member, before, after):
