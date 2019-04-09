@@ -39,26 +39,33 @@ async def on_voice_state_update(member, before, after):
     chan_bef = " ".join(vo_channel.name.split()[0:-1])   # Берем навзвание канала которое было до этого и уберает последнюю позицию через массив
     await vo_channel.edit(name= f"{chan_bef} {len(v_members)}") # редактирует канал на новое название с обновленной информацией
 
+#                           --------------VOICE ONLINE------------------------
+# ------------------------------------------------------------------------------------------------------------------------------------------------------
+#----------------------------------------LOBBY SYSTEM--------------------------------------------------------
 
-    duo_channel = Bot.get_channel(564913710704099328)   # Duo voice чат
+    duo_channel = Bot.get_channel(565225233288658955)   # Duo voice чат
     duo_category = Bot.get_channel(564913597013032961)  # туда куда будут создавваться duo каналы
 
-    if after.channel == duo_channel:    # Человека бросит в только тчо созданный канал если он зайдет в нужный канал
+    if after.channel == duo_channel:    # Человека бросит в только что созданный канал если он зайдет в нужный канал
         new_voice_channel = await duo_category.create_voice_channel("duo", user_limit = 2)
         await member.edit(voice_channel= new_voice_channel)
 
 
-    if isinstance(before.channel, discord.VoiceChannel) and \
-        before.channel.name == "duo" and \
-            len(before.channel.members) < 1:   # Если в duo канале меньше 1 человека то он удаляется
-        try:
+    if isinstance(before.channel, discord.VoiceChannel) and before.channel.name == "duo" and before.channel.category == duo_category:
+        if len(before.channel.members) < 1:   # Если в duo канале меньше 1 человека то он удаляется
             await before.channel.delete()
-        except Exception:
-            pass
+        else:
+            await before.channel.set_permissions(discord.utils.get(before.channel.guild.roles, name= "@everyone"), read_messages= True)
 
-        
+    if isinstance(after.channel, discord.VoiceChannel) and after.channel.name == "duo":
+        if len(after.channel.members) >= 2:
+            try:
+                await after.channel.set_permissions(discord.utils.get(after.channel.guild.roles, name="@everyone"), read_messages= False)
+            except Exception:
+                pass
+           
 
-
+            
 
 
 @Bot.event
@@ -193,4 +200,4 @@ async def image(ctx):
 
 
 Bot.loop.create_task(my_time())
-Bot.run(open("Bot/token.txt", 'r').read())
+Bot.run(open("token.txt", 'r').read())
