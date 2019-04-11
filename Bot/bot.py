@@ -39,6 +39,7 @@ async def on_voice_state_update(member, before, after):
     chan_bef = " ".join(vo_channel.name.split()[0:-1])   # Берем навзвание канала которое было до этого и уберает последнюю позицию через массив
     await vo_channel.edit(name= f"{chan_bef} {len(v_members)}") # редактирует канал на новое название с обновленной информацией
 
+
 #----------------------------------------VOICE ONLINE---------------------------------------------------------------------------------------------
 # ------------------------------------------------------------------------------------------------------------------------------------------------
 #----------------------------------------LOBBY SYSTEM---------------------------------------------------------------------------------------------
@@ -71,7 +72,7 @@ async def on_voice_state_update(member, before, after):
 
             if len(before.channel.members) == 0:    # Удаляет если пустой
                 await before.channel.delete()
-            elif len(before.channel.members) == 1:
+            elif len(before.channel.members) < limit:  # Делает канал видимым
                 everyone = discord.utils.get(before.channel.guild.roles, name= '@everyone')
                 await before.channel.set_permissions(everyone, read_messages= True)
     except AttributeError:
