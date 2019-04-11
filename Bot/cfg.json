@@ -1,8 +1,48 @@
 {
     "guild": 457617717755904011,
-    "channels": {
-        "time": 559596558631436289,
-        "voice_online": 559601161368371200,
-        "online": 559601147145617429
+    "channel": {
+        "widget": {
+            "online": 559601147145617429,
+            "online_voice": 559601161368371200,
+            "time": 559596558631436289
+        },
+        "lobby": {
+            "Duo": {
+                "create_name": "duo",
+                "channel_id": 565225233288658955,
+                "category_id": 564913597013032961,
+                "limit": 2
+            },
+            "Squad": {
+                "create_name": "squad",
+                "channel_id": 565164762963378176,
+                "category_id": 548992839745404930,
+                "limit": 4
+            },
+            "SandBox": {
+                "create_name": "sandbox",
+                "channel_id": 565165137846075392,
+                "category_id": 548999457468055582,
+                "limit": 4
+            },
+            "Creative": {
+                "create_name": "creative",
+                "channel_id": 565165649534386176,
+                "category_id": 565174382041759744,
+                "limit": 4
+            },
+            "TournamentDuo": {
+                "create_name": "TournamentDuo",
+                "channel_id": 565169344598900749,
+                "category_id": 549001045427224592,
+                "limit": 2
+            },
+            "TournamentSquad": {
+                "create_name": "tournamentsquad",
+                "channel_id": 565225515137368074,
+                "category_id": 565173369272664064,
+                "limit": 4
+            }
+        }
     }
 }

@@ -10,7 +10,7 @@ who_afk = {}
 
 async def my_time():
     await Bot.wait_until_ready()
-    channel = Bot.get_channel(559596558631436289)   # TIME CHANNEL
+    channel = Bot.get_channel(cfg['channel']['widget']['time'])   # TIME CHANNEL
 
     moscow = datetime.now(timezone('Europe/Moscow')).strftime('%H:%M')  # Узнаем время по МСК
     chan_bef = " ".join(channel.name.split()[0:-1])
@@ -28,9 +28,9 @@ async def on_ready():
 
 @Bot.event
 async def on_voice_state_update(member, before, after):
-    guild = Bot.get_guild(457617717755904011)   # Беру сервер
+    guild = Bot.get_guild(cfg['guild'])   # Беру сервер
     channels = guild.channels  # Юеру все каналы
-    vo_channel = Bot.get_channel(559601161368371200)   # Voice online channel
+    vo_channel = Bot.get_channel(cfg['channel']['widget']['online_voice'])   # Voice online channel
 
     v_channels = [channel for channel in channels if isinstance(channel, discord.VoiceChannel)]
     v_members = []
@@ -39,39 +39,60 @@ async def on_voice_state_update(member, before, after):
     chan_bef = " ".join(vo_channel.name.split()[0:-1])   # Берем навзвание канала которое было до этого и уберает последнюю позицию через массив
     await vo_channel.edit(name= f"{chan_bef} {len(v_members)}") # редактирует канал на новое название с обновленной информацией
 
-#                           --------------VOICE ONLINE------------------------
-# ------------------------------------------------------------------------------------------------------------------------------------------------------
-#----------------------------------------LOBBY SYSTEM--------------------------------------------------------
-
-    duo_channel = Bot.get_channel(565225233288658955)   # Duo voice чат
-    duo_category = Bot.get_channel(564913597013032961)  # туда куда будут создавваться duo каналы
-
-    if after.channel == duo_channel:    # Человека бросит в только что созданный канал если он зайдет в нужный канал
-        new_voice_channel = await duo_category.create_voice_channel("duo", user_limit = 2)
-        await member.edit(voice_channel= new_voice_channel)
+#----------------------------------------VOICE ONLINE---------------------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------------------------------------------------------------------------
+#----------------------------------------LOBBY SYSTEM---------------------------------------------------------------------------------------------
 
 
-    if isinstance(before.channel, discord.VoiceChannel) and before.channel.name == "duo" and before.channel.category == duo_category:
-        if len(before.channel.members) < 1:   # Если в duo канале меньше 1 человека то он удаляется
-            await before.channel.delete()
-        else:
-            await before.channel.set_permissions(discord.utils.get(before.channel.guild.roles, name= "@everyone"), read_messages= True)
+    lobbys = cfg['channel']['lobby']
+    id_of_channels = [i['channel_id'] for i in lobbys.values()]
 
-    if isinstance(after.channel, discord.VoiceChannel) and after.channel.name == "duo":
-        if len(after.channel.members) >= 2:
-            try:
-                await after.channel.set_permissions(discord.utils.get(after.channel.guild.roles, name="@everyone"), read_messages= False)
-            except Exception:
-                pass
-           
+    try:
+        if after.channel.id in id_of_channels:  # Создает и перебрасывает
+            for name in lobbys:
+                if after.channel.id == lobbys[name]['channel_id']:
+                    c_name = lobbys[name]['create_name']
+                    limit = lobbys[name]['limit']
+                    category = Bot.get_channel(lobbys[name]['category_id'])
+                    new_voice_channel = await category.create_voice_channel(c_name, user_limit = limit)
+                    await member.edit(voice_channel= new_voice_channel)
+                    break
+    except AttributeError:
+        pass
 
-            
+    names = [name['create_name'] for name in lobbys.values()]
+    categorys = [n['category_id'] for n in lobbys.values()]
+    try:
+        if before.channel.name in names and before.channel.category.id in categorys:
+            for name in lobbys:
+                if before.channel.category.id == lobbys[name]['category_id']:
+                    limit = lobbys[name]['limit']
+                    break
 
+            if len(before.channel.members) == 0:    # Удаляет если пустой
+                await before.channel.delete()
+            elif len(before.channel.members) == 1:
+                everyone = discord.utils.get(before.channel.guild.roles, name= '@everyone')
+                await before.channel.set_permissions(everyone, read_messages= True)
+    except AttributeError:
+        pass
+    try:
+        if after.channel.name in names and after.channel.category.id in categorys:
+            for name in lobbys:
+                if after.channel.category.id == lobbys[name]['category_id']:
+                    limit = lobbys[name]['limit']
+                    break
+
+            if len(after.channel.members) >= limit:
+                everyone = discord.utils.get(after.channel.guild.roles, name= '@everyone')
+                await after.channel.set_permissions(everyone, read_messages= False)
+    except AttributeError:
+        pass
 
 @Bot.event
 async def on_member_update(before, after):
-    guild = Bot.get_guild(457617717755904011)
-    channel_o = Bot.get_channel(559601147145617429)
+    guild = Bot.get_guild(cfg['guild'])
+    channel_o = Bot.get_channel(cfg['channel']['widget']['online'])
 
     chan_bef = " ".join(channel_o.name.split()[0:-1])
     online = [mem for mem in guild.members if mem.status is discord.Status.online]
