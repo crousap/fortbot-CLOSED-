@@ -22,5 +22,5 @@ author: need to footer, if autor is none then footer now will be exist
         if a_author is not None:
                 emb.set_author(name= a_author.name, icon_url= a_author.avatar_url, url= link.format(a_author.id))
         if author is not None:
-                emb.set_footer(text= "Requested by " + author.display_name, icon_url= author.avatar_url)
+                emb.set_footer(text= "Запросил " + author.display_name, icon_url= author.avatar_url)
         return emb

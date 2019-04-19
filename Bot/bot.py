@@ -1,7 +1,9 @@
 from modules.__init__ import *
 from modules.func import *
 
-Bot = commands.Bot(command_prefix= "$$")
+prefix = cfg['prefix']
+
+Bot = commands.Bot(command_prefix= prefix)
 
 Bot.remove_command("help")
 
@@ -24,7 +26,7 @@ async def my_time():
 @Bot.event
 async def on_ready():
     print("Online")
-    await Bot.change_presence(status= discord.Status.dnd, activity= discord.Game("$$help"))
+    await Bot.change_presence(status= discord.Status.dnd, activity= discord.Game(f"{prefix}help"))
 
 @Bot.event
 async def on_voice_state_update(member, before, after):
@@ -91,6 +93,21 @@ async def on_voice_state_update(member, before, after):
         pass
 
 @Bot.event
+async def on_command_error(ctx, error):
+    if isinstance(error, commands.CommandNotFound):
+        await ctx.message.delete()
+        await ctx.send(f"{ctx.message.author.mention} ``Прости ,но команды нету ¯\_(ツ)_/¯``", 
+                        delete_after= 3)
+    elif isinstance(error, commands.BadArgument):
+        if str(ctx.message.content.split(" ")[0]) == (f"{prefix}report"):
+            msg_content = f"""``
+О, я вижу то, что ты хочешь кинуть на кого-то репорт, спотри как надо это делать:``
+\n{prefix}report {Bot.user.mention} \"Он слишком хорош !\"
+\n``Заметь что сама жалоба находиться в двойных кавычках``"""
+        await ctx.send(msg_content, delete_after= 15)
+        await ctx.message.delete()
+
+@Bot.event
 async def on_member_update(before, after):
     guild = Bot.get_guild(cfg['guild'])
     channel_o = Bot.get_channel(cfg['channel']['widget']['online'])
@@ -103,6 +120,9 @@ async def on_member_update(before, after):
 @Bot.event
 async def on_message(msg):
     global who_afk
+    if msg.author == Bot.user:
+        pass
+
     if msg.author in who_afk and not msg.author.bot:
         try:
             await msg.author.edit(nick= who_afk[msg.author])
@@ -219,6 +239,33 @@ async def image(ctx):
         os.remove(path)
         os.rmdir("files")
         await ctx.message.delete()
+
+@Bot.command()
+async def report(ctx, user: discord.User, desc):
+    """Отправить репорт на кого-то"""
+    report_channel = Bot.get_channel(cfg['channel']['report']) # Deff report channel
+
+    emb = add_fie(  # Создаем embed
+        cemb(
+            "Жалоба", 
+            colour,
+            ctx.message.author,
+            Bot.user),
+            {
+                "Виновник": user.mention,
+                "Провинился в": desc
+            })
+
+    emb.set_footer(text=f"Отправил жалобу {ctx.message.author.display_name}", 
+                    icon_url= ctx.message.author.avatar_url) # Ставим автора в конце
+
+    msg = await report_channel.send(embed= emb)
+    temp_msg = await ctx.send(f"``Спасибо ``{ctx.message.author.mention}`` за то, что способствуешь улучшению коммьюнити сервера``")
+
+    await asyncio.sleep(10)
+    await ctx.message.channel.delete_messages([temp_msg, ctx.message])
+    
+
 
 
 Bot.loop.create_task(my_time())
