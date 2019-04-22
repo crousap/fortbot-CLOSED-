@@ -94,16 +94,21 @@ async def on_voice_state_update(member, before, after):
 
 @Bot.event
 async def on_command_error(ctx, error):
+    ctx_command = str(ctx.message.content.split(" ")[0])
     if isinstance(error, commands.CommandNotFound):
         await ctx.message.delete()
         await ctx.send(f"{ctx.message.author.mention} ``Прости ,но команды нету ¯\_(ツ)_/¯``", 
                         delete_after= 3)
-    elif isinstance(error, commands.BadArgument):
-        if str(ctx.message.content.split(" ")[0]) == (f"{prefix}report"):
-            msg_content = f"""``
+    
+    elif isinstance(error, commands.BadArgument) and (ctx_command == (f"{prefix}report")):
+# Если в комманде недописали аргумент, и сама команда report 
+
+        msg_content = \
+f"""``
 О, я вижу то, что ты хочешь кинуть на кого-то репорт, спотри как надо это делать:``
 \n{prefix}report {Bot.user.mention} \"Он слишком хорош !\"
-\n``Заметь что сама жалоба находиться в двойных кавычках``"""
+\n``Заметь что сама жалоба находиться в двойных кавычках``
+"""
         await ctx.send(msg_content, delete_after= 15)
         await ctx.message.delete()
 
