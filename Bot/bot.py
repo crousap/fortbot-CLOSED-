@@ -121,7 +121,6 @@ async def on_member_update(before, after):
     online = [mem for mem in guild.members if mem.status is discord.Status.online]
     await channel_o.edit(name = f"{chan_bef} {len(online)}")
 
-
 @Bot.event
 async def on_message(msg):
     global who_afk
@@ -139,6 +138,7 @@ async def on_message(msg):
         await Bot.process_commands(msg)
     except Exception:
         pass
+
 
 @Bot.command()
 async def choose(ctx, *choices: str):
@@ -189,9 +189,7 @@ async def afk(ctx):
 @Bot.command()
 @commands.has_permissions(administrator= True)
 async def info(ctx, user: discord.Member):
-    """
-Выводит информацию о пользователе
-    """
+    """Выводит информацию о пользователе"""
     emb = add_fie(
         cemb(
                         f"Info about {user.name}", # Title
@@ -264,12 +262,20 @@ async def report(ctx, user: discord.User, desc):
     emb.set_footer(text=f"Отправил жалобу {ctx.message.author.display_name}", 
                     icon_url= ctx.message.author.avatar_url) # Ставим автора в конце
 
-    msg = await report_channel.send(embed= emb)
-    temp_msg = await ctx.send(f"``Спасибо ``{ctx.message.author.mention}`` за то, что способствуешь улучшению коммьюнити сервера``")
+    report_msg = await report_channel.send(embed= emb)
+    reactions = ["👍", "👎"]
+    for r in reactions:
+        await report_msg.add_reaction(r)
+    temp_msg = await ctx.send(f"``Спасибо`` {ctx.message.author.mention} ``за то, что способствуешь улучшению коммьюнити сервера``")
 
     await asyncio.sleep(10)
     await ctx.message.channel.delete_messages([temp_msg, ctx.message])
-    
+
+@Bot.command()
+@commands.has_permissions(administrator= True)
+async def purge(ctx, num: int):
+    """purge command"""
+    await ctx.channel.purge(limit= num+1)
 
 
 
