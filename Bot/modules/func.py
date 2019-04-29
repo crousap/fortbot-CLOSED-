@@ -2,13 +2,13 @@ from modules.__init__ import discord, commands, link
 
 Bot = commands.Bot(command_prefix= "$")
 
-def add_fie(emb, what):
+def add_fie(emb, what, inline= True):
         """ 
 emb = Embed
 What = where key = name, value = value
         """
         for field in what:
-                emb.add_field(name= field, value= what[field])
+                emb.add_field(name= field, value= what[field], inline= inline)
         return emb 
 
 def cemb(title, colour, author= None, a_author= None):

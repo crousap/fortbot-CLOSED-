@@ -192,17 +192,18 @@ async def info(ctx, user: discord.Member):
     """Выводит информацию о пользователе"""
     emb = add_fie(
         cemb(
-                        f"Info about {user.name}", # Title
+                        f"Информация о {user.name}", # Title
                         colour, # colour = переменная colour
                         ctx.message.author, # Footer
                         Bot.user), # Author
     {
-        "Name": user.name, # Имя пользователя
-        "ID": user.id, # ID Пользователя
-        "Status": user.status, # 
-        "Joined at": str(user.joined_at)[:16], # то когда пользователь пришел на сервер
-        "Created at": str(user.created_at)[:16] # Когда был создан аккаунт
-    })
+        "Имя": user.name, # Имя пользователя
+        "ИД": user.id, # ID Пользователя
+        "Статус": user.status, 
+        "Зашел на сервер в": str(user.joined_at)[:16], # то когда пользователь пришел на сервер
+        "Создал свой аккаунт в": str(user.created_at)[:16] # Когда был создан аккаунт
+    },
+    inline= False)
     await ctx.send(embed= emb)
 
 @Bot.group(pass_context= True)
@@ -277,6 +278,16 @@ async def purge(ctx, num: int):
     """purge command"""
     await ctx.channel.purge(limit= num+1)
 
+@Bot.command()
+@commands.has_permissions(administrator= True)
+async def role(ctx, name):
+    """Скоро..."""
+    emb = cemb(
+        "Пока ничего",
+        colour,
+        ctx.message.author,
+        Bot.user)
+    await ctx.send("Здесь пока что ничего нету", embed= emb)
 
 
 Bot.loop.create_task(my_time())
