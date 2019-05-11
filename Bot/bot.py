@@ -1,5 +1,6 @@
 from modules.__init__ import *
 from modules.func import *
+from modules.fortstats import *
 
 prefix = cfg['prefix']
 
@@ -278,17 +279,39 @@ async def purge(ctx, num: int):
     """purge command"""
     await ctx.channel.purge(limit= num+1)
 
-@Bot.command()
-@commands.has_permissions(administrator= True)
-async def role(ctx, name):
-    """Скоро..."""
-    emb = cemb(
-        "Пока ничего",
-        colour,
-        ctx.message.author,
-        Bot.user)
-    await ctx.send("Здесь пока что ничего нету", embed= emb)
+@Bot.group(pass_context= True)
+async def stats(ctx):
+    if ctx.invoked_subcommand is None:
+        await ctx.send("``Тут пусто 0_0``", delete_after= 5)
 
+@stats.command(pass_context= True)
+async def kda(ctx, username):
+    author = ctx.message.author
+    NeedRole = KdaRole(username).strip(' ')
+
+    if NeedRole == "-1":
+        await ctx.send("``Ой, кажется тут какая-то ошибка...\nТы не правильно ввел свое имя``")
+        return
+
+    NeedRoleD = discord.utils.get(ctx.message.guild.roles, name= str(NeedRole))
+
+    try:
+        for role in author.roles:
+            if role.name.startswith('KD'):
+                try:
+                    await author.remove_roles(role)
+                except Exception:
+                    pass
+        await author.add_roles(NeedRoleD)
+    except Exception as e:
+        await ctx.send(f"``Произошло что-то нехоршее. Ошибка:\n {e}``")
+    else:
+        await ctx.send(f"{author.mention} ``Я выдал тебе роль {NeedRole}``")
+
+@Bot.command()
+@commands.is_owner()
+async def py(ctx, *arg):
+    await ctx.send(eval(' '.join(arg)))
 
 Bot.loop.create_task(my_time())
 Bot.run(open("token.txt", 'r').read())

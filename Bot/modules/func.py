@@ -1,4 +1,4 @@
-from modules.__init__ import discord, commands, link
+from modules.__init__ import discord, commands, link, colour
 
 Bot = commands.Bot(command_prefix= "$")
 
@@ -11,14 +11,14 @@ What = where key = name, value = value
                 emb.add_field(name= field, value= what[field], inline= inline)
         return emb 
 
-def cemb(title, colour, author= None, a_author= None):
+def cemb(title, a_colour= colour, author= None, a_author= None):
         """
 title: title of the embed
 colour: color of the embed
 author: need to footer, if autor is none then footer now will be exist
         """
         global link
-        emb = discord.Embed(title= title, colour= colour)
+        emb = discord.Embed(title= title, colour= a_colour)
         if a_author is not None:
                 emb.set_author(name= a_author.name, icon_url= a_author.avatar_url, url= link.format(a_author.id))
         if author is not None:
